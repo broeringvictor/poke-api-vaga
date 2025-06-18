@@ -1,18 +1,17 @@
 <ion-list>
-
-  <ion-item *ngFor="let pokemon of pokemons; trackBy: pokemon?.id" (click)="selectPokemon(pokemon.name)">
+  <ion-item *ngFor="let pokemon of pokemons; trackBy: trackByFn" (click)="selectPokemon(pokemon.name)" detail="false" button>
     <ion-avatar slot="start">
-      <!-- Sprite em miniatura -->
-      <img [src]="pokemon.sprites.front_default" alt="{{ pokemon.name }}">
+      <img [src]="pokemon.sprites.front_default" [alt]="pokemon.name">
     </ion-avatar>
-    <ion-label>{{ pokemon.name | titlecase }}</ion-label>
+    <ion-label>
+      {{ pokemon.name | titlecase }}
+    </ion-label>
   </ion-item>
 </ion-list>
 
-
 <ion-infinite-scroll (ionInfinite)="onLoadMore($event)" [disabled]="!hasMore">
   <ion-infinite-scroll-content
-    loadingSpinner="dots"
+    loadingSpinner="bubbles"
     loadingText="Carregando mais Pokémon...">
   </ion-infinite-scroll-content>
 </ion-infinite-scroll>

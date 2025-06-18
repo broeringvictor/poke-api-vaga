@@ -1,51 +1,70 @@
-ion-item {
-    --background: #e0e0e0;
-    --ripple-color: #bbbbbb;
-    border-bottom: 1px solid #d0d0d0;
-    --padding-start: 4vw;
-    --padding-end: 4vw;
-    cursor: pointer;
-    transition: background 0.2s;
+:host {
+  --avatar-size: 2.75rem;
+  --item-background-color-light: #f7f7f7;
+  --item-border-color-light: #e8e8e8;
+  --avatar-background-light: #f0f0f0;
+  --item-hover-light: #e0e0e0;
 
-    @media (max-width: 600px) {
-        --padding-start: 2vw;
-        --padding-end: 2vw;
-    }
+  --item-background-color-dark: #242424;
+  --item-border-color-dark: #333333;
+  --avatar-background-dark: #2d2d2d;
+  --item-hover-dark: #4d4d4d;
 }
 
-ion-item:last-child {
-    border-bottom: none;
+ion-item {
+  --background: var(--item-background-color-light);
+  --color: var(--ion-text-color);
+  --inner-border-width: 0;
+  border-bottom: 1px solid var(--item-border-color-light);
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+ion-item:hover {
+  --background: var(--item-hover-light);
+}
+
+ion-item:last-of-type {
+  border-bottom: none;
 }
 
 ion-avatar {
-    width: 8vw;
-    height: 8vw;
-    min-width: 36px;
-    min-height: 36px;
-    max-width: 48px;
-    max-height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 3vw;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  margin-inline-end: 1rem;
+  background-color: var(--avatar-background-light);
+  border-radius: 50%;
+  overflow: hidden;
+}
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
+ion-avatar img {
+  padding: 0.25rem;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 ion-label {
-    font-size: clamp(0.9em, 2.5vw, 1.1em);
-    color: #333;
-    word-break: break-word;
+  font-weight: 500;
+  font-size: 0.95rem;
 }
 
 ion-infinite-scroll-content {
-    color: var(--ion-color-medium);
-    font-size: clamp(0.9em, 2vw, 1.1em);
+  color: var(--ion-color-medium);
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-item {
+    --background: var(--item-background-color-dark);
+    border-bottom-color: var(--item-border-color-dark);
+  }
+
+  ion-item:hover {
+    --background: var(--item-hover-dark);
+  }
+
+  ion-avatar {
+    background-color: var(--avatar-background-dark);
+  }
 }

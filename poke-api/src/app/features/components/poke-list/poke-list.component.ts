@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonList,
   IonItem,
-  IonLabel,
   IonAvatar,
+  IonLabel,
   IonInfiniteScroll,
   IonInfiniteScrollContent
 } from '@ionic/angular/standalone';
@@ -14,25 +14,23 @@ import { Pokemon } from 'src/app/models/pokemon.interface';
   selector: 'app-poke-list',
   templateUrl: './poke-list.component.html',
   styleUrls: ['./poke-list.component.scss'],
+  standalone: true,
   imports: [
     CommonModule,
     IonList,
     IonItem,
-    IonLabel,
     IonAvatar,
+    IonLabel,
     IonInfiniteScroll,
     IonInfiniteScrollContent
   ]
 })
-// copiei de poke-grid.component.ts, mas vou adaptar para uma lista
 export class PokeListComponent {
 
-// masMore servirá para o infinite scroll, indicando se há mais Pokémon para carregar
+  @Input() pokemons: Pokemon[] = [];
   @Input() hasMore: boolean = false;
 
-  // Output: Evento emitido quando um Pokémon é selecionado
   @Output() pokemonSelected = new EventEmitter<string | number>();
-  // Output: Evento emitido quando o infinite scroll é ativado
   @Output() loadMore = new EventEmitter<any>();
 
   constructor() { }
@@ -40,7 +38,6 @@ export class PokeListComponent {
   /**
    * Emite o evento 'pokemonSelected' com o nome do Pokémon clicado.
    * @param pokemonName O nome do Pokémon selecionado.
-   * Depois vou utilizar isso para fazer uma popup com os detalhes do Pokémon.
    */
   selectPokemon(pokemonName: string) {
     this.pokemonSelected.emit(pokemonName);
@@ -54,4 +51,13 @@ export class PokeListComponent {
     this.loadMore.emit(event);
   }
 
+  /**
+   * Função trackBy para otimizar a renderização da lista no ngFor.
+   * @param index O índice do item.
+   * @param pokemon O objeto Pokémon.
+   * @returns O ID único do Pokémon.
+   */
+  trackByFn(index: number, pokemon: Pokemon): number {
+    return pokemon.id;
+  }
 }

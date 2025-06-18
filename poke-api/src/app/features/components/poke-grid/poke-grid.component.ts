@@ -36,9 +36,9 @@ export class PokeGridComponent {
   // masMore servirá para o infinite scroll, indicando se há mais Pokémon para carregar
   @Input() hasMore: boolean = false;
 
-  // Output: Evento emitido quando um Pokémon é selecionado
+  // Evento emitido quando um Pokémon é selecionado
   @Output() pokemonSelected = new EventEmitter<string | number>();
-  // Output: Evento emitido quando o infinite scroll é ativado
+  // Evento emitido quando o infinite scroll é ativado
   @Output() loadMore = new EventEmitter<any>();
 
   constructor() { }
@@ -58,5 +58,8 @@ export class PokeGridComponent {
    */
   onLoadMore(event: any) {
     this.loadMore.emit(event);
+  }
+  trackByFn(index: number, pokemon: Pokemon): number {
+    return pokemon.id;
   }
 }
