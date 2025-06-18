@@ -1,0 +1,51 @@
+ion-card {
+    --background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+ion-card-title {
+    font-weight: bold;
+    color: #333;
+    padding-top: 10px;
+}
+
+.pokemon-grid-image {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    padding: 10px;
+    object-fit: contain;
+}
+
+.poke-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+ion-infinite-scroll-content {
+    color: var(--ion-color-primary);
+}
+
+@media (max-width: 600px) {
+    .poke-grid-container {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        padding: 5px;
+    }
+    .pokemon-grid-image {
+        max-width: 100px;
+        padding: 5px;
+    }
+}
