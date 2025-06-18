@@ -1,5 +1,7 @@
 {
-  "name": "list",
-  "integrations": {},
+  "name": "poke-api",
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
