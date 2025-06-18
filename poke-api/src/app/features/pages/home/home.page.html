@@ -1,12 +1,112 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Pokedex
-    </ion-title>
+    <!-- Botão de menu para telas menores -->
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>PokeDex</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  
+  <!-- ion-split-pane cria um layout de duas colunas em telas maiores e um menu deslizante em telas menores -->
+  <ion-split-pane contentId="main-content" when="md">
+    <!-- Menu lateral (barra de 1/4 de largura) para os 50 Pokémon -->
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Todos os Pokémon</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <!-- Loop para exibir os 50 Pokémon na barra lateral -->
+          <ion-item *ngFor="let pokemon of sidebarPokemonList" (click)="getPokemonDetails(pokemon.name)">
+            <ion-avatar slot="start">
+              <!-- Sprite em miniatura -->
+              <img [src]="pokemon.sprites.front_default" alt="{{ pokemon.name }}">
+            </ion-avatar>
+            <ion-label>{{ pokemon.name | titlecase }}</ion-label>
+          </ion-item>
+        </ion-list>
+        <!-- Mensagem se a lista estiver vazia e não estiver carregando -->
+        <div *ngIf="!sidebarPokemonList.length && !isLoading" class="ion-text-center ion-padding">
+          <p>Nenhum Pokémon na lista lateral. Verifique sua conexão.</p>
+        </div>
+      </ion-content>
+    </ion-menu>
+
+    <!-- Conteúdo principal (onde os 25 Pokémon e os detalhes são exibidos) -->
+    <div class="ion-page" id="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <!-- Botão de menu para telas menores, duplicado aqui para o cabeçalho do conteúdo principal -->
+          <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+          <ion-title>PokeDex Principal</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="ion-padding">
+          <h2 class="ion-text-center">Primeiros 25 Pokémon</h2>
+
+          <!-- Indicador de carregamento -->
+          <div *ngIf="isLoading" class="ion-text-center ion-padding">
+            <ion-spinner name="bubbles"></ion-spinner>
+            <p>Carregando Pokémon...</p>
+          </div>
+
+          <!-- Grade para os 25 Pokémon principais -->
+          <ion-grid *ngIf="mainPokemonList.length > 0 && !isLoading">
+            <ion-row>
+              <ion-col size="12" size-md="6" size-lg="4" *ngFor="let pokemon of mainPokemonList">
+                <ion-card (click)="getPokemonDetails(pokemon.name)">
+                  <ion-card-header>
+                    <ion-card-title class="ion-text-center">{{ pokemon.name | titlecase }}</ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="ion-text-center">
+                    <!-- Tenta carregar a arte oficial primeiro, senão o sprite frontal padrão -->
+                    <img [src]="pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default"
+                         alt="{{ pokemon.name }}"
+                         class="pokemon-main-image">
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <!-- Mensagem se a lista principal estiver vazia e não estiver carregando -->
+          <div *ngIf="!mainPokemonList.length && !isLoading" class="ion-text-center ion-padding">
+            <p>Nenhum Pokémon carregado na lista principal. Verifique sua conexão ou tente novamente.</p>
+          </div>
+
+          <!-- Detalhes do Pokémon Selecionado -->
+          <ion-card *ngIf="selectedPokemonDetails" class="ion-margin-top">
+            <ion-card-header>
+              <ion-card-title class="ion-text-center">{{ selectedPokemonDetails.name | titlecase }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-text-center">
+              <img [src]="selectedPokemonDetails.sprites.other?.['official-artwork']?.front_default || selectedPokemonDetails.sprites.front_default"
+                   alt="{{ selectedPokemonDetails.name }}"
+                   class="pokemon-detail-image">
+              <p><strong>ID:</strong> {{ selectedPokemonDetails.id }}</p>
+              <p><strong>Altura:</strong> {{ selectedPokemonDetails.height / 10 }} m</p>
+              <p><strong>Peso:</strong> {{ selectedPokemonDetails.weight / 10 }} kg</p>
+              <p><strong>Tipos:</strong>
+                <span *ngFor="let type of selectedPokemonDetails.types; last as isLast">
+                  {{ type.type.name | titlecase }}{{ !isLast ? ', ' : '' }}
+                </span>
+              </p>
+              <p><strong>Habilidades:</strong>
+                <span *ngFor="let ability of selectedPokemonDetails.abilities; last as isLast">
+                  {{ ability.ability.name | titlecase }}{{ !isLast ? ', ' : '' }}
+                </span>
+              </p>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </ion-content>
+    </div>
+  </ion-split-pane>
 </ion-content>
-  
