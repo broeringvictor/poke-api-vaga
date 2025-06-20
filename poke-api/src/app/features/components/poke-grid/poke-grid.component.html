@@ -1,60 +1,61 @@
 <ion-grid>
-  <ion-row>
-    @for (pokemon of pokemons; track pokemon.id) {
-      <ion-col size="6" size-sm="4" size-md="3" size-lg="2">
-        <ion-card class="pokemon-card" (click)="selectPokemon(pokemon)" button="true">
-          <ion-button 
-              fill="clear" 
-              class="favorite-button" 
-              (click)="toggleFavorite(pokemon, $event)"
-              aria-label="Favoritar Pokémon">
-            <ion-icon 
-                slot="icon-only" 
-                [name]="pokemon.isFavorite ? 'heart' : 'heart-outline'" 
-                [color]="pokemon.isFavorite ? 'danger' : 'medium'">
-            </ion-icon>
-          </ion-button>
+  <ion-row>
+    @for (pokemon of pokemons; track pokemon.id) {
+      <ion-col size="6" size-sm="4" size-md="3" size-lg="2">
+        <ion-card class="pokemon-card" (click)="selectPokemon(pokemon)" button="true">
+          <ion-button 
+              fill="clear" 
+              class="favorite-button" 
+              (click)="toggleFavorite(pokemon, $event)"
+              aria-label="Favoritar Pokémon">
+            
+                                    <ion-icon 
+                slot="icon-only" 
+                [name]="favoriteService.isFavorite(pokemon.id) ? 'heart' : 'heart-outline'" 
+                [color]="favoriteService.isFavorite(pokemon.id) ? 'danger' : 'medium'">
+            </ion-icon>
+          </ion-button>
 
-          <ion-text class="pokemon-id">#{{ pokemon.id.toString().padStart(4, '0') }}</ion-text>
+          <ion-text class="pokemon-id">#{{ pokemon.id.toString().padStart(4, '0') }}</ion-text>
 
-          <ion-card-content>
-            <img
-              [src]="pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default"
-              [alt]="'Imagem do ' + pokemon.name"
-              class="pokemon-image"
-              loading="lazy"
-            />
-            
-            <ion-card-title class="pokemon-name">
-              {{ pokemon.name | titlecase }}
-            </ion-card-title>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    }
-  </ion-row>
+          <ion-card-content>
+            <img
+              [src]="pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default"
+              [alt]="'Imagem do ' + pokemon.name"
+              class="pokemon-image"
+              loading="lazy"
+            />
+            
+            <ion-card-title class="pokemon-name">
+              {{ pokemon.name | titlecase }}
+            </ion-card-title>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    }
+  </ion-row>
 </ion-grid>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar class="pagination-toolbar">
-    <div class="pagination-controls">
-      <ion-button 
-          fill="clear" 
-          (click)="changePage(currentPage - 1)" 
-          [disabled]="currentPage <= 1"
-          aria-label="Página anterior">
-        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
-      </ion-button>
+  <ion-toolbar class="pagination-toolbar">
+    <div class="pagination-controls">
+      <ion-button 
+          fill="clear" 
+          (click)="changePage(currentPage - 1)" 
+          [disabled]="currentPage <= 1"
+          aria-label="Página anterior">
+        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+      </ion-button>
 
-      <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
+      <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
 
-      <ion-button 
-          fill="clear" 
-          (click)="changePage(currentPage + 1)" 
-          [disabled]="currentPage >= totalPages"
-          aria-label="Próxima página">
-        <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
-      </ion-button>
-    </div>
-  </ion-toolbar>
+      <ion-button 
+          fill="clear" 
+          (click)="changePage(currentPage + 1)" 
+          [disabled]="currentPage >= totalPages"
+          aria-label="Próxima página">
+        <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
 </ion-footer>
