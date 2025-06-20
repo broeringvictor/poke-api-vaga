@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// HttpClientModule foi removido daqui pois não é usado diretamente no template.
-// A injeção do HttpClient é feita no provider global (geralmente app.config.ts)
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, lastValueFrom, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
 import {
   IonHeader,
   IonToolbar,
@@ -14,16 +13,12 @@ import {
   IonMenu,
   IonButtons,
   IonMenuButton,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonCardTitle
 } from '@ionic/angular/standalone';
 
 import { Pokemon } from 'src/app/models/pokemon.interface';
 import { PokeapiService } from 'src/app/services/pokeapi.service';
 import { PokeGridComponent } from '../../components/poke-grid/poke-grid.component';
-import { PokeListComponent } from '../../components/poke-list/poke-list.component'; // Verifique se o caminho está correto
+import { PokeListComponent } from '../../components/poke-list/poke-list.component';
 
 @Component({
   selector: 'app-home',
@@ -41,102 +36,144 @@ import { PokeListComponent } from '../../components/poke-list/poke-list.componen
     IonMenu,
     IonButtons,
     IonMenuButton,
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
-    IonCardTitle,
     PokeGridComponent,
-    PokeListComponent // Importação do novo componente
+    PokeListComponent,
   ],
 })
 export class HomePage implements OnInit {
+  public pokemons: Pokemon[] = [];
+  public allLoadedPokemons: Pokemon[] = [];
 
-  allLoadedPokemons: Pokemon[] = [];
-  selectedPokemonDetails: Pokemon | null = null;
-  isLoading: boolean = false;
-  currentOffset: number = 0;
-  pokemonLoadLimit: number = 20;
-  hasMorePokemons: boolean = true;
+  public currentPage = 1;
+  public totalPages = 0;
+  public isLoading = true;
+  public isListLoading = false;
+  public hasMorePokemons = true;
 
-  constructor(private pokeapiService: PokeapiService) {}
+  private readonly itemsPerPage = 24;
+  private listOffset = 0;
+  private readonly listLimit = 40;
 
-  ngOnInit() {
-    this.loadMorePokemonData();
+  private pokeapiService = inject(PokeapiService);
+
+  async ngOnInit(): Promise<void> {
+    await this.loadPaginatedPokemons(this.currentPage);
+    this.loadMorePokemonDataForList();
   }
 
-  loadMorePokemonData(event?: any) {
-    if (this.isLoading || !this.hasMorePokemons) {
-      if (event) event.target.complete();
+  public async loadPaginatedPokemons(page: number): Promise<void> {
+    this.isLoading = true;
+    this.currentPage = page;
+    const offset = (page - 1) * this.itemsPerPage;
+
+    try {
+      const response = await lastValueFrom(
+        this.pokeapiService.getPokemonList(this.itemsPerPage, offset)
+      );
+
+      if (this.totalPages === 0) {
+        this.totalPages = Math.ceil(response.count / this.itemsPerPage);
+      }
+
+      this.pokemons = await this.fetchAndProcessPokemonDetails(response.results);
+    } catch (error) {
+      console.error('Erro ao carregar Pokémon para a grade:', error);
+      this.pokemons = [];
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  public async loadMorePokemonDataForList(event?: any): Promise<void> {
+    if (this.isListLoading || !this.hasMorePokemons) {
+      event?.target.complete();
       return;
     }
+    this.isListLoading = true;
 
-    this.isLoading = true;
+    try {
+      const response = await lastValueFrom(
+        this.pokeapiService.getPokemonList(this.listLimit, this.listOffset)
+      );
 
-    this.pokeapiService.getPokemonList(this.pokemonLoadLimit, this.currentOffset).subscribe({
-      next: (pagedResponse) => {
-        if (!pagedResponse.next) {
-          this.hasMorePokemons = false;
-        }
-
-        const pokemonDetailRequests = pagedResponse.results.map(p =>
-          this.pokeapiService.getPokemonDetails(p.name).pipe(
-            catchError(err => {
-              console.error(`Erro ao carregar detalhes do Pokémon ${p.name}:`, err);
-              return of(null);
-            })
-          )
-        );
-
-        forkJoin(pokemonDetailRequests).subscribe({
-          next: (detailedPokemons: (Pokemon | null)[]) => {
-            const validPokemons = detailedPokemons.filter(p => p !== null) as Pokemon[];
-            this.allLoadedPokemons = [...this.allLoadedPokemons, ...validPokemons];
-            this.currentOffset += this.pokemonLoadLimit;
-            this.isLoading = false;
-            if (event) {
-              event.target.complete();
-            }
-
-            if (!this.selectedPokemonDetails && this.allLoadedPokemons.length > 0) {
-              this.selectedPokemonDetails = this.allLoadedPokemons[0];
-            }
-          },
-          error: (err) => {
-            console.error('Erro ao carregar detalhes dos Pokémon:', err);
-            this.isLoading = false;
-            if (event) {
-              event.target.complete();
-            }
-          }
-        });
-      },
-      error: (err) => {
-        console.error('Erro ao carregar lista inicial de Pokémon:', err);
-        this.isLoading = false;
-        if (event) {
-          event.target.complete();
-        }
+      if (!response.next) {
+        this.hasMorePokemons = false;
       }
-    });
-  }
 
-  onPokemonSelected(identifier: string | number) {
-    const foundPokemon = this.allLoadedPokemons.find(p => p.name === identifier || p.id === identifier);
-    if (foundPokemon) {
-      this.selectedPokemonDetails = foundPokemon;
-    } else {
-      this.pokeapiService.getPokemonDetails(identifier).subscribe({
-        next: (data) => {
-          this.selectedPokemonDetails = data;
-        },
-        error: (err) => {
-          console.error(`Erro ao carregar detalhes do Pokémon ${identifier}:`, err);
-        }
-      });
+      const newPokemons = await this.fetchAndProcessPokemonDetails(response.results);
+      this.allLoadedPokemons = [...this.allLoadedPokemons, ...newPokemons];
+      this.listOffset += this.listLimit;
+    } catch (error) {
+      console.error('Erro ao carregar mais Pokémon para a lista:', error);
+    } finally {
+      this.isListLoading = false;
+      event?.target.complete();
     }
   }
 
-  getPokemonImageUrl(pokemon: Pokemon): string {
-    return pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default;
+  public onPageChange(newPage: number): void {
+    this.loadPaginatedPokemons(newPage);
+  }
+
+  public onPokemonSelected(pokemon: Pokemon): void {
+    console.log('Pokémon selecionado na home page:', pokemon.name);
+    // Aqui você pode implementar a lógica para, por exemplo, abrir um modal com os detalhes.
+  }
+
+  public onToggleFavorite(toggledPokemon: Pokemon): void {
+    const isNowFavorite = !toggledPokemon.isFavorite;
+
+    const updateStatus = (pokemon: Pokemon) => {
+      if (pokemon.id === toggledPokemon.id) {
+        return { ...pokemon, isFavorite: isNowFavorite };
+      }
+      return pokemon;
+    };
+
+    this.pokemons = this.pokemons.map(updateStatus);
+    this.allLoadedPokemons = this.allLoadedPokemons.map(updateStatus);
+
+    console.log(
+      `${toggledPokemon.name} foi ${
+        isNowFavorite ? 'favoritado' : 'desfavoritado'
+      }.`
+    );
+  }
+
+  private async fetchAndProcessPokemonDetails(
+    list: { name: string; url: string }[]
+  ): Promise<Pokemon[]> {
+    if (list.length === 0) {
+      return [];
+    }
+
+    const detailRequests = list.map(p =>
+      this.pokeapiService.getPokemonDetails(p.name).pipe(
+        catchError(() => of(null))
+      )
+    );
+
+    const detailedPokemons = await lastValueFrom(forkJoin(detailRequests));
+    const validPokemons = detailedPokemons.filter((p): p is Pokemon => p !== null);
+
+    this.syncFavoriteStatus(validPokemons);
+    return validPokemons;
+  }
+
+  private syncFavoriteStatus(newPokemons: Pokemon[]): void {
+    const favoriteIdsFromGrid = this.pokemons
+      .filter(p => p.isFavorite)
+      .map(p => p.id);
+    const favoriteIdsFromList = this.allLoadedPokemons
+      .filter(p => p.isFavorite)
+      .map(p => p.id);
+    
+    const allFavoriteIds = new Set([...favoriteIdsFromGrid, ...favoriteIdsFromList]);
+
+    newPokemons.forEach(pokemon => {
+      if (allFavoriteIds.has(pokemon.id)) {
+        pokemon.isFavorite = true;
+      }
+    });
   }
 }

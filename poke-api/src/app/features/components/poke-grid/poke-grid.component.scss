@@ -1,51 +1,89 @@
-ion-card {
-    --background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
+/* Estilo geral do Card */
+.pokemon-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 5px 5px 5px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
-    &:hover {
-        transform: translateY(-5px);
-    }
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
 }
 
-ion-card-title {
-    font-weight: bold;
-    color: #333;
-    padding-top: 10px;
+/* Número/ID do Pokémon */
+.pokemon-id {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #a0a0a0;
+  background-color: rgba(240, 240, 240, 0.8);
+  padding: 2px 6px;
+  border-radius: 10px;
 }
 
-.pokemon-grid-image {
-    width: 100%;
-    max-width: 150px;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-    padding: 10px;
-    object-fit: contain;
+/* Botão de Favoritar */
+.favorite-button {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  --padding-start: 5px;
+  --padding-end: 5px;
+  --padding-top: 5px;
+  --padding-bottom: 5px;
+
+  ion-icon {
+    font-size: 1.5rem; // Tamanho do ícone
+  }
 }
 
-.poke-grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px;
-    padding: 10px;
+/* Imagem do Pokémon */
+.pokemon-image {
+  width: 100%;
+  max-width: 120px;
+  height: 120px;
+  object-fit: contain; // Garante que a imagem caiba sem distorcer
+  margin: 0 auto;
 }
 
-ion-infinite-scroll-content {
-    color: var(--ion-color-primary);
+/* Nome do Pokémon */
+.pokemon-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-top: 8px;
+  padding: 0 5px; // Evita que nomes longos toquem as bordas
 }
 
-@media (max-width: 600px) {
-    .poke-grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 12px;
-        padding: 5px;
-    }
-    .pokemon-grid-image {
-        max-width: 100px;
-        padding: 5px;
-    }
+/* Controles de Paginação */
+.pagination-toolbar {
+  --background: transparent;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 5px 0;
+  
+  .page-info {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 16px;
+    color: var(--ion-text-color, #000);
+  }
+
+  ion-button {
+    --color: var(--ion-color-primary);
+  }
 }

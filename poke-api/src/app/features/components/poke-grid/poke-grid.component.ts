@@ -1,65 +1,71 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonGrid,
   IonRow,
   IonCol,
   IonCard,
-  IonCardHeader,
   IonCardContent,
   IonCardTitle,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent
+  IonText,
+  IonButton,
+  IonIcon,
+  IonFooter,
+  IonToolbar,
 } from '@ionic/angular/standalone';
-import { Pokemon } from 'src/app/models/pokemon.interface'; // Importe a interface Pokemon
+import { addIcons } from 'ionicons';
+import { heart, heartOutline, chevronBack, chevronForward } from 'ionicons/icons';
+import { Pokemon } from 'src/app/models/pokemon.interface';
 
 @Component({
   selector: 'app-poke-grid',
   templateUrl: './poke-grid.component.html',
   styleUrls: ['./poke-grid.component.scss'],
+  standalone: true,
   imports: [
     CommonModule,
     IonGrid,
     IonRow,
     IonCol,
     IonCard,
-    IonCardHeader,
     IonCardContent,
     IonCardTitle,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent
-  ]
+    IonText,
+    IonButton,
+    IonIcon,
+    IonFooter,
+    IonToolbar,
+  ],
 })
 export class PokeGridComponent {
-  
-  @Input() pokemons: Pokemon[] = [];
-  // masMore servirá para o infinite scroll, indicando se há mais Pokémon para carregar
-  @Input() hasMore: boolean = false;
+  @Input({ required: true }) public pokemons!: Pokemon[];
+  @Input({ required: true }) public currentPage!: number;
+  @Input({ required: true }) public totalPages!: number;
 
-  // Evento emitido quando um Pokémon é selecionado
-  @Output() pokemonSelected = new EventEmitter<string | number>();
-  // Evento emitido quando o infinite scroll é ativado
-  @Output() loadMore = new EventEmitter<any>();
+  @Output() public readonly pokemonSelected = new EventEmitter<Pokemon>();
+  @Output() public readonly pageChange = new EventEmitter<number>();
+  @Output() public readonly favoriteToggle = new EventEmitter<Pokemon>();
 
-  constructor() { }
-
-  /**
-   * Emite o evento 'pokemonSelected' com o nome do Pokémon clicado.
-   * @param pokemonName O nome do Pokémon selecionado.
-   * Depois vou utilizar isso para fazer uma popup com os detalhes do Pokémon.
-   */
-  selectPokemon(pokemonName: string) {
-    this.pokemonSelected.emit(pokemonName);
+  constructor() {
+    addIcons({ heart, heartOutline, chevronBack, chevronForward });
   }
 
-  /**
-   * Emite o evento 'loadMore' quando o infinite scroll é acionado.
-   * @param event O evento do IonInfiniteScroll.
-   */
-  onLoadMore(event: any) {
-    this.loadMore.emit(event);
+  public selectPokemon(pokemon: Pokemon): void {
+    this.pokemonSelected.emit(pokemon);
   }
-  trackByFn(index: number, pokemon: Pokemon): number {
+
+  public changePage(page: number): void {
+    if (page > 0 && page <= this.totalPages) {
+      this.pageChange.emit(page);
+    }
+  }
+
+  public toggleFavorite(pokemon: Pokemon, event: MouseEvent): void {
+    event.stopPropagation();
+    this.favoriteToggle.emit(pokemon); 
+  }
+
+  public trackById(index: number, pokemon: Pokemon): number {
     return pokemon.id;
   }
 }

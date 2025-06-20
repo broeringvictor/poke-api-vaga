@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>PokeDex</ion-title>
+    <ion-title>PokéDex</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,52 +12,49 @@
     <ion-menu contentId="main-content" type="overlay">
       <ion-header>
         <ion-toolbar>
-          <ion-title>Todos os Pokémon</ion-title>
+          <ion-title>Lista de Pokémon</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
-        <app-poke-list
-          [pokemons]="allLoadedPokemons"
-          [hasMore]="hasMorePokemons"
-          (pokemonSelected)="onPokemonSelected($event)"
-          (loadMore)="loadMorePokemonData($event)">
-        </app-poke-list>
-        <div *ngIf="!allLoadedPokemons.length && !isLoading" class="ion-text-center ion-padding">
-          <p>Nenhum Pokémon na lista lateral. Verifique sua conexão.</p>
-        </div>
+
+      <ion-content class="ion-padding">
+        @if (allLoadedPokemons.length > 0) {
+          <app-poke-list
+            [pokemons]="allLoadedPokemons"
+            [hasMore]="hasMorePokemons"
+            (loadMore)="loadMorePokemonDataForList($event)"
+          >
+          </app-poke-list>
+        } @else if (!isListLoading) {
+          <div class="ion-text-center">
+            <p>Nenhum Pokémon encontrado.</p>
+          </div>
+        }
       </ion-content>
     </ion-menu>
 
     <div class="ion-page" id="main-content">
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-          <ion-title>PokeDex Principal</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <div class="ion-padding">
-          <h2 class="ion-text-center">Pokédex</h2>
+      <ion-content class="ion-padding">
+        <h2 class="ion-text-center">Bem-vindo à PokéDex</h2>
 
-          <div *ngIf="isLoading && !allLoadedPokemons.length" class="ion-text-center ion-padding">
-            <ion-spinner name="bubbles"></ion-spinner>
+        @if (isLoading && pokemons.length === 0) {
+          <div class="ion-text-center ion-padding-top">
+            <ion-spinner name="bubbles" aria-label="Carregando Pokémon"></ion-spinner>
             <p>Carregando Pokémon...</p>
           </div>
-
+        } @else if (pokemons.length > 0) {
           <app-poke-grid
-            [pokemons]="allLoadedPokemons"
-            [hasMore]="hasMorePokemons"
-            (loadMore)="loadMorePokemonData($event)">
+            [pokemons]="pokemons"
+            [currentPage]="currentPage"
+            [totalPages]="totalPages"
+            (pageChange)="onPageChange($event)"
+            (favoriteToggle)="onToggleFavorite($event)"
+          >
           </app-poke-grid>
-
-          <div *ngIf="!allLoadedPokemons.length && !isLoading" class="ion-text-center ion-padding">
-            <p>Nenhum Pokémon carregado na grade. Verifique sua conexão ou tente novamente.</p>
+        } @else {
+          <div class="ion-text-center ion-padding-top">
+            <p>Não foi possível carregar os Pokémon. Verifique sua conexão.</p>
           </div>
-
-          
-        </div>
+        }
       </ion-content>
     </div>
   </ion-split-pane>
