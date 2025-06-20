@@ -35,28 +35,16 @@ export class PokeListComponent {
 
   constructor() { }
 
-  /**
-   * Emite o evento 'pokemonSelected' com o nome do Pokémon clicado.
-   * @param pokemonName O nome do Pokémon selecionado.
-   */
+
   selectPokemon(pokemonName: string) {
     this.pokemonSelected.emit(pokemonName);
   }
 
-  /**
-   * Emite o evento 'loadMore' quando o infinite scroll é acionado.
-   * @param event O evento do IonInfiniteScroll.
-   */
   onLoadMore(event: any) {
     this.loadMore.emit(event);
   }
 
-  /**
-   * Função trackBy para otimizar a renderização da lista no ngFor.
-   * @param index O índice do item.
-   * @param pokemon O objeto Pokémon.
-   * @returns O ID único do Pokémon.
-   */
+
   trackByFn(index: number, pokemon: Pokemon): number {
     return pokemon.id;
   }
