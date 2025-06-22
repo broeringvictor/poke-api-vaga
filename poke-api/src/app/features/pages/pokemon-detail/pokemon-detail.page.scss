@@ -1,0 +1,33 @@
+.pokemon-image {
+  width: 70%;
+  max-width: 250px;
+  margin: 20px auto; 
+  display: block;
+}
+
+ion-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+
+ion-chip {
+  &[color="grass"] { --background: #78c850; --color: #fff; }
+  &[color="fire"] { --background: #f08030; --color: #fff; }
+  &[color="water"] { --background: #6890f0; --color: #fff; }
+  &[color="bug"] { --background: #a8b820; --color: #fff; }
+  &[color="normal"] { --background: #a8a878; --color: #fff; }
+  &[color="poison"] { --background: #a040a0; --color: #fff; }
+  &[color="electric"] { --background: #f8d030; --color: #212121; }
+  &[color="ground"] { --background: #e0c068; --color: #212121; }
+  &[color="fairy"] { --background: #ee99ac; --color: #212121; }
+  &[color="fighting"] { --background: #c03028; --color: #fff; }
+  &[color="psychic"] { --background: #f85888; --color: #fff; }
+  &[color="rock"] { --background: #b8a038; --color: #fff; }
+  &[color="ghost"] { --background: #705898; --color: #fff; }
+  &[color="ice"] { --background: #98d8d8; --color: #212121; }
+  &[color="dragon"] { --background: #7038f8; --color: #fff; }
+  &[color="dark"] { --background: #705848; --color: #fff; }
+  &[color="steel"] { --background: #b8b8d0; --color: #212121; }
+  &[color="flying"] { --background: #a890f0; --color: #fff; }
+}

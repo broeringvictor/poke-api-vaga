@@ -37,13 +37,13 @@
           <p>Carregando Pokémon...</p>
         </div>
       } @else if (pokemons.length > 0) {
-        <app-poke-grid
-          [pokemons]="pokemons"
-          [currentPage]="currentPage"
-          [totalPages]="totalPages"
-          (pageChange)="onPageChange($event)"
-        >
-        </app-poke-grid>
+        <app-poke-grid 
+        [pokemons]="pokemons"
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        (pageChange)="onPageChange($event)"
+        (pokemonSelected)="onPokemonSelected($event)"  >
+      </app-poke-grid>
       } @else {
         <div class="ion-text-center ion-padding-top">
           <p>Não foi possível carregar os Pokémon. Verifique sua conexão.</p>

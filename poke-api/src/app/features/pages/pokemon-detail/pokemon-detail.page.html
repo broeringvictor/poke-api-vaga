@@ -1,0 +1,66 @@
+<ng-container *ngIf="pokemon$ | async as pokemon; else loading">
+  
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/"></ion-back-button>
+      </ion-buttons>
+      <ion-title>{{ pokemon.name | titlecase }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="ion-padding">
+    <ion-card>
+      <img [src]="getPokemonImageUrl(pokemon)" [alt]="pokemon.name" class="pokemon-image" />
+
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">#{{ pokemon.id }} - {{ pokemon.name | titlecase }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="ion-text-center ion-margin-bottom">
+          <ion-chip *ngFor="let typeInfo of pokemon.types" [color]="typeInfo.type.name">
+            <ion-label>{{ typeInfo.type.name | titlecase }}</ion-label>
+          </ion-chip>
+        </div>
+        
+        <ion-grid>
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="6" class="ion-text-center">
+              <ion-label color="medium">Altura</ion-label>
+              <p><strong>{{ pokemon.height / 10 }} m</strong></p>
+            </ion-col>
+            <ion-col size="6" class="ion-text-center">
+              <ion-label color="medium">Peso</ion-label>
+              <p><strong>{{ pokemon.weight / 10 }} kg</strong></p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-list-header>Habilidades</ion-list-header>
+        <ion-list lines="full">
+          <ion-item *ngFor="let abilityInfo of pokemon.abilities">
+            <ion-label>{{ abilityInfo.ability.name | titlecase }}</ion-label>
+            <ion-badge *ngIf="abilityInfo.is_hidden" slot="end" color="tertiary">Oculta</ion-badge>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+
+</ng-container>
+
+<ng-template #loading>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Carregando...</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-text-center ion-padding">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Buscando dados do Pokémon...</p>
+  </ion-content>
+</ng-template>

@@ -35,3 +35,35 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+// global.scss
+
+.pokemon-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+}
+
+.pokemon-id {
+  font-family: 'Roboto Mono', monospace;
+}
+
+.pokemon-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid #e0e0e0; // Apenas para o modo claro
+  box-shadow: none;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Estilos para o modo escuro
+body.dark {
+  .pokemon-card {
+    border: 1px solid #333;
+     &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+     }
+  }
+}

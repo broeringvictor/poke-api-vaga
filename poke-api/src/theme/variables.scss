@@ -1,2 +1,7 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+body {
+  --ion-color-primary: #E63946;
+  --ion-color-primary-rgb: 230, 57, 70;
+  --ion-font-family: 'Inter', sans-serif;
+}
