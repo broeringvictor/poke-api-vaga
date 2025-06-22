@@ -49,12 +49,15 @@
 
 .pokemon-card {
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  border: 1px solid #e0e0e0; // Apenas para o modo claro
-  box-shadow: none;
+  border: 1px solid #e0e0e0;
+ 
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-box-shadow);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-5px);
+    box-shadow: var(--card-hover-box-shadow);
   }
 }
 

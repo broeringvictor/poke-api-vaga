@@ -1,7 +1,60 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
-body {
+:root {
+  /** Fontes **/
+  --ion-font-family: 'Inter', sans-serif;
+
+
   --ion-color-primary: #E63946;
   --ion-color-primary-rgb: 230, 57, 70;
-  --ion-font-family: 'Inter', sans-serif;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #ca323e;
+  --ion-color-primary-tint: #e84d59;
+
+
+  --ion-color-secondary: #457B9D;
+  --ion-color-tertiary: #A8DADC;
+  --ion-color-success: #2dd36f;
+  --ion-color-warning: #FFD700; 
+  --ion-color-danger: #eb445a;
+
+
+  --ion-background-color: #F8F9FA;
+  --ion-background-color-rgb: 248, 249, 250;
+  --ion-text-color: #212529;
+  --ion-text-color-rgb: 33, 37, 41;
+
+
+  --ion-color-step-150: #e0e0e0; // Para bordas sutis
+  --ion-color-medium: #8A8A8A;
+  
+ 
+  --card-background: #ffffff;
+  --card-border-radius: 12px;
+  --card-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --card-hover-box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  --menu-background: var(--ion-background-color);
+  --menu-item-separator-color: #d0d0d0;
+}
+
+
+
+body.dark {
+
+  --ion-background-color: #121212;
+  --ion-background-color-rgb: 18, 18, 18;
+  --ion-text-color: #E1E1E1;
+  --ion-text-color-rgb: 225, 225, 225;
+
+
+  --ion-color-step-150: #333333;
+  --ion-color-medium: #8A8A8A;
+  
+
+  --card-background: #1E1E1E;
+  --card-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --card-hover-box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  --menu-background: var(--ion-background-color);
+  --menu-item-separator-color: #2a2a2a;
 }

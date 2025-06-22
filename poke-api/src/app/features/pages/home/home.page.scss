@@ -1,141 +1,64 @@
-/* home.page.scss */
 
-/* Estilos para o cabeçalho da página */
-ion-header {
-  ion-toolbar {
-    --background: #3880ff; /* Cor primária do Ionic */
-    color: #fff; /* Cor do texto no cabeçalho */
-  }
-}
-
-/* Estilos para o conteúdo principal */
-ion-content {
-  --background: #f4f5f8; /* Fundo claro para o conteúdo */
-}
-
-/* Estilos para o ion-split-pane */
 ion-split-pane {
-  --side-width: 25%; /* Define a largura da barra lateral para 1/4 */
-  --side-max-width: 300px; /* Limita a largura máxima da barra lateral */
-  --side-min-width: 200px; /* Define a largura mínima da barra lateral */
-
-  /* Em telas menores (até 768px), o menu funciona como overlay */
-  @media (max-width: 768px) {
-    --side-width: 100%; /* Ocupa a largura total em telas pequenas */
-    --side-max-width: 100%;
-  }
-
-  /* Garante que o menu esteja sempre visível em telas maiores */
-  &[when="md"] {
-    @media (min-width: 768px) {
-      --ion-split-pane-side-offset: 0;
-    }
-  }
+  --side-max-width: 320px;
+  --side-min-width: 250px;
 }
 
-/* Estilos do menu lateral (sidebar) */
-ion-menu {
-  --background: #e0e0e0; /* Fundo ligeiramente mais escuro para o menu */
 
-  ion-toolbar {
-    --background: #5260ff; /* Cor do cabeçalho do menu */
-    color: #fff;
-  }
+ion-menu {
+
+  --background: var(--menu-background); 
 
   ion-item {
-    --background: #e0e0e0;
-    --ripple-color: #bbbbbb; /* Cor do efeito de clique */
-    border-bottom: 1px solid #d0d0d0; /* Separador entre os itens */
-    --padding-start: 10px; /* Espaçamento interno inicial */
-    --padding-end: 10px; /* Espaçamento interno final */
-  }
 
-  ion-item:last-child {
-    border-bottom: none; /* Remove a borda do último item */
+    --background: transparent;
+    border-bottom: 1px solid var(--menu-item-separator-color);
+    
+
+    &:last-child {
+      border-bottom: none; 
+    }
   }
 
   ion-avatar {
-    width: 40px; /* Tamanho da miniatura do sprite */
+    width: 40px;
     height: 40px;
-    border-radius: 50%; /* Torna a imagem circular */
-    overflow: hidden; /* Garante que a imagem se encaixe no círculo */
-    margin-right: 10px; /* Espaçamento à direita da imagem */
+    margin-inline-end: 12px; 
 
     img {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* Garante que o sprite inteiro seja visível */
+      object-fit: contain;
     }
-  }
-
-  ion-label {
-    font-size: 0.9em; /* Tamanho da fonte do nome do Pokémon */
-    color: #333;
   }
 }
 
-/* Oculta o botão de menu em telas grandes onde o split-pane está sempre aberto */
+
 ion-menu-button {
-  @media (min-width: 769px) {
+  @media (min-width: 992px) { 
     display: none;
   }
 }
 
-/* Estilos para os cartões dos 25 Pokémon principais */
+
+
 ion-card {
-  --background: #ffffff; /* Fundo branco para os cartões */
-  border-radius: 10px; /* Cantos arredondados */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  margin-bottom: 20px; /* Espaçamento inferior */
-  cursor: pointer; /* Indica que o cartão é clicável */
+  --background: var(--card-background);
+  width: 100%; 
+  margin-inline: 0;
+  margin-bottom: 1.25rem;
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-box-shadow);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-hover-box-shadow);
+  }
 }
 
-ion-card-title {
-  font-weight: bold;
-  color: #333;
-  padding-top: 10px; /* Espaçamento superior do título */
-}
 
-.pokemon-main-image {
-  width: 100%;
-  max-width: 150px; /* Tamanho da imagem principal */
-  height: auto;
-  margin: 0 auto; /* Centraliza a imagem */
-  display: block; /* Garante que a imagem ocupe sua própria linha */
-  padding: 10px; /* Espaçamento interno da imagem */
-}
 
-/* Estilos para a imagem de detalhes do Pokémon selecionado */
-.pokemon-detail-image {
-  width: 100%;
-  max-width: 200px; /* Imagem maior para os detalhes */
-  height: auto;
-  margin: 0 auto 15px; /* Centraliza e adiciona margem inferior */
-  display: block;
-}
 
-/* Estilos gerais do contêiner, mantidos do seu código original */
-#container {
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  color: #8c8c8c;
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}

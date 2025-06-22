@@ -1,8 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
+
+import { mergeMap, map, catchError, toArray } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'; // Importação necessária
-import { forkJoin, lastValueFrom, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { forkJoin, lastValueFrom, of, from } from 'rxjs';
+
 import {
     IonHeader,
     IonToolbar,
@@ -85,6 +87,7 @@ export class HomePage implements OnInit {
             this.isLoading = false;
         }
     }
+    
 
     public async loadMorePokemonDataForList(event?: any): Promise<void> {
         if (this.isListLoading || !this.hasMorePokemons) {
@@ -146,15 +149,16 @@ export class HomePage implements OnInit {
         );
 
         const detailedPokemonsWithNulls = await lastValueFrom(forkJoin(detailRequests));
-
+        
         // Filtra os nulos e processa os dados válidos de uma só vez
         return detailedPokemonsWithNulls
             .filter((pokemon): pokemon is Pokemon => pokemon !== null)
             .map(pokemon => {
-                // Adiciona a propriedade isFavorite
+                
                 return {
                     ...pokemon,
                     isFavorite: this.favoriteService.isFavorite(pokemon.id)
                 };
-            });
-}}
+            });}
+
+}

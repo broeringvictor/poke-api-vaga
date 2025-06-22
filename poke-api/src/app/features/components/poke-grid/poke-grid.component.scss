@@ -1,89 +1,20 @@
-/* Estilo geral do Card */
-.pokemon-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 5px 5px 5px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  }
-}
-
-
 .pokemon-id {
   position: absolute;
   top: 8px;
   right: 8px;
   font-size: 0.75rem;
-  font-weight: bold;
-  color: #a0a0a0;
-  background-color: rgba(240, 240, 240, 0.8);
-  padding: 2px 6px;
+  font-weight: 500; 
+  
+ 
+  color: var(--ion-color-medium);
+  
+
+  padding: 2px 8px;
   border-radius: 10px;
 }
 
-/* Botão de Favoritar */
 .favorite-button {
   position: absolute;
   top: 0px;
   left: 0px;
-  --padding-start: 5px;
-  --padding-end: 5px;
-  --padding-top: 5px;
-  --padding-bottom: 5px;
-
-  ion-icon {
-    font-size: 1.5rem; // Tamanho do ícone
-  }
-}
-
-/* Imagem do Pokémon */
-.pokemon-image {
-  width: 100%;
-  max-width: 120px;
-  height: 120px;
-  object-fit: contain; // Garante que a imagem caiba sem distorcer
-  margin: 0 auto;
-}
-
-/* Nome do Pokémon */
-.pokemon-name {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #333;
-  text-align: center;
-  margin-top: 8px;
-  padding: 0 5px; // Evita que nomes longos toquem as bordas
-}
-
-/* Controles de Paginação */
-.pagination-toolbar {
-  --background: transparent;
-}
-
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 5px 0;
-  
-  .page-info {
-    font-size: 1rem;
-    font-weight: 500;
-    margin: 0 16px;
-    color: var(--ion-text-color, #000);
-  }
-
-  ion-button {
-    --color: var(--ion-color-primary);
-  }
 }

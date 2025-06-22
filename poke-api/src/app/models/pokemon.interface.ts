@@ -17,7 +17,7 @@ export interface Pokemon {
   name: string;
   height: number;
   weight: number;
-  isFavorite?: boolean;
+  isFavorite: boolean;
   sprites: {
     front_default: string; // URL da imagem frontal padrão do Pokémon
     other?: {

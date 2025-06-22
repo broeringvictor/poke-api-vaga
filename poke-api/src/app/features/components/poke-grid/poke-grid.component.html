@@ -2,7 +2,7 @@
   <ion-row>
     @for (pokemon of pokemons; track pokemon.id) {
       <ion-col size="6" size-sm="4" size-md="3" size-lg="2">
-        <ion-card class="pokemon-card" (click)="selectPokemon(pokemon)" button="true">
+        <ion-card class="pokemon-card ion-text-center" (click)="selectPokemon(pokemon)" button="true">
           <ion-button
             fill="clear"
             class="favorite-button"
@@ -58,4 +58,3 @@
       <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
     </ion-button>
   </ion-toolbar>
-</ion-footer>

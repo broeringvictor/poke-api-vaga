@@ -31,6 +31,13 @@ Conforme meu último commit (`Feat: Adicionando o favorite.service para salvar o
 
 Este passo é para habilitar a interatividade nos cards dos Pokémon e criar a base para a futura tela de "Meus Favoritos".
 ![como está](image-1.png)
+
+Adicionado tema padrão, paginação conforme descrito no enunciado.
+![tema](image-4.png)
+
+Minha ideia era utilizar somente a home e manter as informações em um modal, mas como foi solicitado que tenha redirencionamento da rota, adicionei ao clicar no pokemon ir para /pokemon/nome-do-pokemon.
+
+![nome-do-pokemon](image-5.png)
 ## Próximos Passos
 
 Após finalizar o serviço de favoritos e integrá-lo à interface, meus próximos passos serão:
