@@ -95,13 +95,22 @@ A página de detalhes do Pokémon foi aprimorada com:
 
 A linha evolutiva ainda apresenta um desafio: tentei utilizar o ID da foto para evitar uma requisição extra, mas avalio ajustar ou realizar novas requisições para melhorar.
 
-<div align="center">
-    <img src="image-11.png" alt="Linha evolutiva" width="400"/>
-</div>
+Consegui arrumar.
+
+| ![Linha evolutiva 1](image-11.png) | ![Linha evolutiva 2](image-13.png) |
+|:----------------------------------:|:----------------------------------:|
+| Linha evolutiva                    | Linha evolutiva                    |
 
 ### Exibição dos Moves
 
 Estou avaliando a melhor forma de exibir os moves, pois consegui puxar os golpes de cada versão do jogo, mas a apresentação ainda não está ideal.
+
+
+### Melhorando a usabilidade
+Comecei a refatorar o html da pokemons detail.
+<div align="center">
+    <img src="image-14.png" alt="refatoração" width="400"/>
+</div>
 
 <div align="center">
     <img src="image-12.png" alt="Exibição dos moves por versão" width="400"/>

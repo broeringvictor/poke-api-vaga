@@ -11,7 +11,7 @@ import {
   IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip,
   IonLabel, IonGrid, IonRow, IonCol, IonList, IonItem, IonBadge, IonSpinner,
   IonButton, IonIcon, IonProgressBar, IonAvatar,
-  IonSelect, IonSelectOption // Adicionar os imports para o Select
+  IonSelect, IonSelectOption, IonCardSubtitle, IonText  
 } from '@ionic/angular/standalone';
 
 import {
@@ -19,7 +19,9 @@ import {
 } from 'src/app/models/pokemon.interface';
 import { PokeapiService } from 'src/app/services/pokeapi.service';
 
-// Interface para o nosso golpe já processado e filtrado
+
+
+
 export interface FilteredMove {
   name: string;
   level: number;
@@ -36,7 +38,7 @@ export interface FilteredMove {
     IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
     IonChip, IonLabel, IonGrid, IonRow, IonCol, IonList, IonItem, IonBadge,
     IonSpinner, IonButton, IonIcon, IonProgressBar, IonAvatar,
-    IonSelect, IonSelectOption // Adicionados aqui
+    IonSelect, IonSelectOption, IonCardSubtitle, IonText
   ]
 })
 export class PokemonDetailPage implements OnInit {
@@ -44,8 +46,9 @@ export class PokemonDetailPage implements OnInit {
   private pokeapiService = inject(PokeapiService);
 
   public pokemon$!: Observable<PokemonProfile>;
+  public showShiny = false;
+  private spriteInterval: any;
 
-  // --- LÓGICA PARA O FILTRO DE GOLPES ---
   public gameVersions: string[] = [];
   public selectedVersion: string = '';
   public filteredMoves: FilteredMove[] = [];
@@ -58,6 +61,18 @@ export class PokemonDetailPage implements OnInit {
   ngOnInit() {
     this.loadPokemonData();
   }
+  ngAfterViewInit(): void {
+    // Inicia a animação após a view ser carregada
+    this.spriteInterval = setInterval(() => {
+      this.showShiny = !this.showShiny;
+    }, 3000); // Alterna a cada 3 segundos
+  }
+  ngOnDestroy(): void {
+    if (this.spriteInterval) {
+    clearInterval(this.spriteInterval);
+    }
+  }
+
 
   loadPokemonData(): void {
     const pokemonName = this.route.snapshot.paramMap.get('name');
@@ -85,6 +100,8 @@ export class PokemonDetailPage implements OnInit {
           description,
           genus,
           evolutionChain: evolutionChain ?? undefined,
+           gender_rate: species.gender_rate, 
+          color: species.color.name
         } as PokemonProfile;
       }),
       tap(pokemon => {
@@ -152,9 +169,21 @@ export class PokemonDetailPage implements OnInit {
     }
     return chain;
   }
+  public getGender(rate: number): string {
+    if (rate === -1) {
+      return 'Sem Gênero';
+    }
+    // A taxa é em oitavos de chance de ser fêmea. 
+    // 1/8 = 12.5% Fêmea, 87.5% Macho
+    const femaleChance = (rate / 8) * 100;
+    const maleChance = 100 - femaleChance;
+    return `♂ ${maleChance}% / ♀ ${femaleChance}%`;
+  }
   
   public getEvolutionSpriteUrl(speciesUrl: string): string {
-    const id = speciesUrl.split('/').filter(Boolean).pop();
+   
+    const id = speciesUrl.split('/').filter(Boolean).pop(); 
+
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
-  }
+    } 
 }

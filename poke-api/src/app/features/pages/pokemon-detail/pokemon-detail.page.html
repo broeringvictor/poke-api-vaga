@@ -1,7 +1,6 @@
 <ng-container *ngIf="pokemon$ | async as pokemon; else loading">
-
   <ion-header class="ion-no-border">
-    <ion-toolbar color="primary">
+    <ion-toolbar>
       <ion-buttons slot="start">
         <ion-back-button defaultHref="/"></ion-back-button>
       </ion-buttons>
@@ -10,65 +9,92 @@
   </ion-header>
 
   <ion-content>
-    <ion-card class="ion-text-center">
-      <ion-card-header>
-        <ion-card-title>#{{ pokemon.id | number:'3.0-0' }} - {{ pokemon.name | titlecase }}</ion-card-title>
-        <ion-label color="medium" class="ion-text-capitalize">{{ pokemon.genus }}</ion-label>
-      </ion-card-header>
-
+    <div class="ion-padding">
       <ion-grid>
-        <ion-row class="ion-align-items-center ion-justify-content-center">
-          <ion-col size="6">
-            <ion-label color="medium">Normal</ion-label>
-            <img [src]="pokemon.sprites.other?.['official-artwork']?.front_default" [alt]="pokemon.name" />
+        <ion-row class="ion-align-items-center">
+          <ion-col size="12" size-md="5">
+            <ion-card class="sprite-card">
+              <div class="sprite-container">
+                <img 
+                  [src]="pokemon.sprites.other?.['official-artwork']?.front_default" 
+                  [alt]="pokemon.name"
+                  class="pokemon-sprite"
+                  [ngClass]="{ 'visible': !showShiny }">
+                <img 
+                  [src]="pokemon.sprites.other?.['official-artwork']?.front_shiny" 
+                  [alt]="'Shiny ' + pokemon.name"
+                  class="pokemon-sprite"
+                  [ngClass]="{ 'visible': showShiny }">
+              </div>
+              <ion-card-header>
+                <ion-card-subtitle>{{ showShiny ? 'Shiny' : 'Normal' }}</ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
           </ion-col>
-          <ion-col size="6">
-            <ion-label color="medium">Shiny</ion-label>
-            <img [src]="pokemon.sprites.other?.['official-artwork']?.front_shiny" [alt]="'Shiny ' + pokemon.name" />
+
+          <ion-col size="12" size-md="7">
+            <ion-card-title>#{{ pokemon.id | number:'3.0-0' }} {{ pokemon.name | titlecase }}</ion-card-title>
+            <ion-card-subtitle>{{ pokemon.genus }}</ion-card-subtitle>
+
+            <p class="ion-margin-top">{{ pokemon.description }}</p>
+
+            <div class="ion-text-center ion-margin-vertical">
+              <ion-button fill="clear" (click)="playCry(pokemon.cries.latest)">
+                Ouvir Grito <ion-icon slot="end" name="volume-high-outline"></ion-icon>
+              </ion-button>
+            </div>
+
+            <ion-list lines="full" class="info-list">
+              <ion-item>
+                <ion-label>Altura</ion-label>
+                <ion-text slot="end">{{ pokemon.height / 10 }} m</ion-text>
+              </ion-item>
+              <ion-item>
+                <ion-label>Peso</ion-label>
+                <ion-text slot="end">{{ pokemon.weight / 10 }} kg</ion-text>
+              </ion-item>
+              <ion-item>
+                <ion-label>Sexo</ion-label>
+                <ion-text slot="end">{{ getGender(pokemon.gender_rate) }}</ion-text>
+              </ion-item>
+              <ion-item>
+                <ion-label>Tipos</ion-label>
+                <div slot="end" class="ion-text-right">
+                  <ion-chip *ngFor="let typeInfo of pokemon.types" [attr.data-type]="typeInfo.type.name">
+                    <ion-label>{{ typeInfo.type.name | titlecase }}</ion-label>
+                  </ion-chip>
+                </div>
+              </ion-item>
+              <ion-item>
+                <ion-label>Habilidades</ion-label>
+                <div slot="end" class="ion-text-right">
+                  <p *ngFor="let abilityInfo of pokemon.abilities" class="ion-no-margin">
+                    {{ abilityInfo.ability.name.replace('-', ' ') | titlecase }}
+                    <span *ngIf="abilityInfo.is_hidden">(Oculta)</span>
+                  </p>
+                </div>
+              </ion-item>
+            </ion-list>
+              <ion-card>
+              <ion-card-header>
+                <ion-card-title>Atributos Base</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list lines="none">
+                  <ion-item *ngFor="let stat of pokemon.stats">
+                    <ion-label class="ion-text-capitalize" slot="start">{{ stat.stat.name.replace('-', ' ') }}</ion-label>
+                    <ion-badge slot="start" color="light">{{ stat.base_stat }}</ion-badge>
+                    <ion-progress-bar [value]="stat.base_stat / 255" color="primary"></ion-progress-bar>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>
-      
-      <ion-button fill="clear" (click)="playCry(pokemon.cries.latest)">
-        Ouvir Grito <ion-icon slot="end" name="volume-high-outline"></ion-icon>
-      </ion-button>
-      
-      <ion-card-content>
-        <p class="ion-padding-horizontal">{{ pokemon.description }}</p>
+    </div>
 
-        <div class="ion-margin-bottom">
-          <ion-chip *ngFor="let typeInfo of pokemon.types" [color]="typeInfo.type.name">
-            <ion-label>{{ typeInfo.type.name | titlecase }}</ion-label>
-          </ion-chip>
-        </div>
-
-        <ion-row class="ion-justify-content-center">
-          <ion-col size="6">
-            <ion-label color="medium">Altura</ion-label>
-            <p><strong>{{ pokemon.height / 10 }} m</strong></p>
-          </ion-col>
-          <ion-col size="6">
-            <ion-label color="medium">Peso</ion-label>
-            <p><strong>{{ pokemon.weight / 10 }} kg</strong></p>
-          </ion-col>
-        </ion-row>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Atributos Base</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list lines="none">
-          <ion-item *ngFor="let stat of pokemon.stats">
-            <ion-label class="ion-text-capitalize" slot="start">{{ stat.stat.name.replace('-', ' ') }}</ion-label>
-            <ion-badge slot="start" color="light">{{ stat.base_stat }}</ion-badge>
-            <ion-progress-bar [value]="stat.base_stat / 255" color="primary"></ion-progress-bar>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
+    
     
     <ion-card *ngIf="pokemon.evolutionChain">
       <ion-card-header>
@@ -79,7 +105,7 @@
           <ng-container *ngFor="let evo of getEvolutionChain(pokemon.evolutionChain); let isLast = last">
             <ion-col size="auto" class="ion-text-center">
               <ion-avatar>
-                <img [src]="getEvolutionSpriteUrl(evo.species.name)" [alt]="evo.species.name" />
+                <img [src]="getEvolutionSpriteUrl(evo.species.url)" [alt]="evo.species.name" />
               </ion-avatar>
               <ion-label class="ion-text-capitalize">{{ evo.species.name }}</ion-label>
             </ion-col>
@@ -96,7 +122,6 @@
         <ion-card-title>Golpes (Moves)</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-
         <ion-item lines="full">
           <ion-label>Versão do Jogo</ion-label>
           <ion-select [value]="selectedVersion" placeholder="Selecione" (ionChange)="onVersionChange($event)">
@@ -127,11 +152,10 @@
             </tbody>
           </table>
         </div>
-        
       </ion-card-content>
     </ion-card>
-      </ion-content>
-    </ng-container>
+  </ion-content>
+</ng-container>
 
 <ng-template #loading>
   <ion-header class="ion-no-border">
