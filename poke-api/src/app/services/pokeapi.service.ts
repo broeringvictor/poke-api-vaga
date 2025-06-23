@@ -17,8 +17,13 @@ export class PokeapiService {
     return this.http.get<PokemonPagedResponse>(`${this.baseUrl}/pokemon?limit=${limit}&offset=${offset}`);
   }
 
- 
+
   getPokemonDetails(identifier: string | number): Observable<Pokemon> {
     return this.http.get<Pokemon>(`${this.baseUrl}/pokemon/${identifier}`);
+  }
+
+
+  getDataFromUrl<T>(fullUrl: string): Observable<T> {
+    return this.http.get<T>(fullUrl);
   }
 }
