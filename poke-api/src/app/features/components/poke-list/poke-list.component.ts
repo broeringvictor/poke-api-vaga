@@ -1,51 +1,59 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  IonList,
-  IonItem,
-  IonAvatar,
-  IonLabel,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent
-} from '@ionic/angular/standalone';
-import { Pokemon } from 'src/app/models/pokemon.interface';
+import { RouterLink } from '@angular/router';
 
-@Component({
-  selector: 'app-poke-list',
-  templateUrl: './poke-list.component.html',
-  styleUrls: ['./poke-list.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
+import {
     IonList,
     IonItem,
     IonAvatar,
     IonLabel,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent
-  ]
+    IonButton,
+    IonIcon,
+    IonText
+} from '@ionic/angular/standalone';
+
+import { addIcons } from 'ionicons';
+import { heart, heartOutline } from 'ionicons/icons';
+
+import { Pokemon } from 'src/app/models/pokemon.interface';
+import { FavoriteService } from 'src/app/services/favorite.service';
+import { PadNumberPipe } from 'src/app/pipes/pad-number.pipe';
+
+@Component({
+    selector: 'app-poke-list',
+    templateUrl: './poke-list.component.html',
+    styleUrls: ['./poke-list.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,        
+        IonList,
+        IonItem,
+        IonAvatar,
+        IonLabel,
+        IonButton,
+        IonIcon,        
+        PadNumberPipe
+    ],
 })
 export class PokeListComponent {
+    @Input({ required: true }) public pokemons!: Pokemon[];
+    @Output() public readonly pokemonSelected = new EventEmitter<Pokemon>();
 
-  @Input() pokemons: Pokemon[] = [];
-  @Input() hasMore: boolean = false;
+    constructor(public favoriteService: FavoriteService) {
+        addIcons({ heart, heartOutline });
+    }
 
-  @Output() pokemonSelected = new EventEmitter<string | number>();
-  @Output() loadMore = new EventEmitter<any>();
+    public selectPokemon(pokemon: Pokemon): void {
+        this.pokemonSelected.emit(pokemon);
+    }
 
-  constructor() { }
+    public toggleFavorite(pokemon: Pokemon, event: MouseEvent): void {
+        event.stopPropagation();
+        this.favoriteService.toggleFavorite(pokemon.id);
+        pokemon.isFavorite = this.favoriteService.isFavorite(pokemon.id);
+    }
 
-
-  selectPokemon(pokemonName: string) {
-    this.pokemonSelected.emit(pokemonName);
-  }
-
-  onLoadMore(event: any) {
-    this.loadMore.emit(event);
-  }
-
-
-  trackByFn(index: number, pokemon: Pokemon): number {
-    return pokemon.id;
-  }
+    public trackById(index: number, pokemon: Pokemon): number {
+        return pokemon.id;
+    }
 }

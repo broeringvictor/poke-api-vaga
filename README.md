@@ -42,9 +42,8 @@ Minha ideia era utilizar somente a home e manter as informações em um modal, m
 
 Após finalizar o serviço de favoritos e integrá-lo à interface, meus próximos passos serão:
 
-1.  Desenvolver a **Tela de Detalhes**, que será acessada ao clicar em um Pokémon.
+1.  Desenvolver a **Tela de Detalhes**, que será acessada ao clicar em um Pokémon. -> irei colocar todos os detalhes.
 2.  Implementar a **funcionalidade de busca** na tela principal.
-3.  Adicionar os controles de **paginação** para uma navegação fluida.
-4.  Criar a tela dedicada a exibir apenas os Pokémon favoritados.
+
 
 Obrigado por analisar meu projeto! Estou à disposição para qualquer dúvida.

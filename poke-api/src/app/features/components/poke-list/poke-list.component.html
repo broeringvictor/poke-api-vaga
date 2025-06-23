@@ -1,17 +1,32 @@
 <ion-list>
-  <ion-item *ngFor="let pokemon of pokemons; trackBy: trackByFn" (click)="selectPokemon(pokemon.name)" detail="false" button>
-    <ion-avatar slot="start">
-      <img [src]="pokemon.sprites.front_default" [alt]="pokemon.name">
-    </ion-avatar>
-    <ion-label>
-      {{ pokemon.name | titlecase }}
-    </ion-label>
-  </ion-item>
-</ion-list>
+  @for (pokemon of pokemons; track trackById) {
+    <ion-item (click)="selectPokemon(pokemon)" button="true" [detail]="false">
+      
+      <ion-avatar slot="start">
+        <img 
+          [src]="pokemon.sprites.front_default" 
+          [alt]="'Imagem do ' + pokemon.name" 
+          loading="lazy" />
+      </ion-avatar>
 
-<ion-infinite-scroll (ionInfinite)="onLoadMore($event)" [disabled]="!hasMore">
-  <ion-infinite-scroll-content
-    loadingSpinner="bubbles"
-    loadingText="Carregando mais Pokémon...">
-  </ion-infinite-scroll-content>
-</ion-infinite-scroll>
+      <ion-label>
+        <h2>{{ pokemon.name | titlecase }}</h2>
+        <p>#{{ pokemon.id | padNumber }}</p>
+      </ion-label>
+
+      <ion-button
+        fill="clear"
+        slot="end"
+        (click)="toggleFavorite(pokemon, $event)"
+        [attr.aria-label]="pokemon.isFavorite ? 'Desfavoritar ' + pokemon.name : 'Favoritar ' + pokemon.name">
+        
+        <ion-icon
+          slot="icon-only"
+          [name]="pokemon.isFavorite ? 'heart' : 'heart-outline'"
+          [color]="pokemon.isFavorite ? 'danger' : 'medium'">
+        </ion-icon>
+      </ion-button>
+
+    </ion-item>
+  }
+</ion-list>
