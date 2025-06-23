@@ -38,6 +38,14 @@ Adicionado tema padrão, paginação conforme descrito no enunciado.
 Minha ideia era utilizar somente a home e manter as informações em um modal, mas como foi solicitado que tenha redirencionamento da rota, adicionei ao clicar no pokemon ir para /pokemon/nome-do-pokemon.
 
 ![nome-do-pokemon](image-5.png)
+
+Implementei a barra de pesquista.
+Inicialmente, ela pesquisava somente nos pokemons carregados na poke-list. Mas, se eu colocasse para pesquisar ao mesmo tempo que carregasse a poke-list seria inficiente e o(1), dessa forma, pensei em utilizar o localstorage para salvar os dados.
+Na documentação do ionic, localizei o ionicstorage e foi uma grata surpresa, pois consegui criar um serviço para testar e ficou instantaneo a pesquisa. Veja, em um pokemon com id 90x: 
+![sprigatito](image-6.png) ![tabela normal](image-7.png) ![db](image-8.png)
+
+Antes teria que ir carregando a lista varias vezes, assim ficou muito mais eficiente. 
+
 ## Próximos Passos
 
 Após finalizar o serviço de favoritos e integrá-lo à interface, meus próximos passos serão:

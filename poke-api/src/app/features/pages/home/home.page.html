@@ -7,37 +7,56 @@
 
   <ion-toolbar>
     <ion-searchbar
-      placeholder="Buscar Pokémon"
-      [debounce]="500"
+      placeholder="Buscar em todos os Pokémon..."
+      [debounce]="300"
       (ionInput)="handleInput($event)">
     </ion-searchbar>
   </ion-toolbar>
 
   <ion-content role="feed">
-    @if (filteredPokemons.length > 0) {
-      <app-poke-list
-        [pokemons]="filteredPokemons"
-        (pokemonSelected)="onPokemonSelected($event)">
-      </app-poke-list>
+    
+    @if (isSearching) {
+      <ion-list lines="full">
+        @for (pokemon of searchResults; track pokemon.name) {
+          <ion-item (click)="onSearchResultSelected(pokemon.name)" button="true" detail="false">
+            <ion-label>{{ pokemon.name | titlecase }}</ion-label>
+          </ion-item>
+        }
+        @if (searchResults.length === 0) {
+          <ion-item lines="none">
+            <ion-label class="ion-text-center ion-padding">
+              <p>Nenhum resultado encontrado.</p>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
 
-      <ion-infinite-scroll
-        (ionInfinite)="loadMorePokemonDataForList($event)"
-        [disabled]="!hasMorePokemons"
-        threshold="250px">
-        <ion-infinite-scroll-content
-          loadingSpinner="bubbles"
-          loadingText="Carregando...">
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
     } @else {
-      <div class="ion-text-center ion-padding">
-        <p>Nenhum Pokémon encontrado.</p>
-      </div>
+      @if (allLoadedPokemons.length > 0) {
+        <app-poke-list
+          [pokemons]="allLoadedPokemons"
+          (pokemonSelected)="onPokemonSelected($event)">
+        </app-poke-list>
+
+        <ion-infinite-scroll
+          (ionInfinite)="loadMorePokemonDataForList($event)"
+          [disabled]="!hasMorePokemons"
+          threshold="250px">
+          <ion-infinite-scroll-content
+            loadingSpinner="bubbles"
+            loadingText="Carregando...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
+      } @else if (!isListLoading) {
+        <div class="ion-text-center ion-padding">
+          <p>Nenhum Pokémon carregado na lista.</p>
+        </div>
+      }
     }
+
   </ion-content>
 </ion-menu>
-
-
 
 
 <div class="ion-page" id="main-content">
