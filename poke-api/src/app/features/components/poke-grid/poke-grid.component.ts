@@ -70,10 +70,14 @@ export class PokeGridComponent {
     }
 
 
-    public toggleFavorite(pokemon: Pokemon, event: MouseEvent): void {
-        event.stopPropagation(); 
-        this.favoriteService.toggleFavorite(pokemon.id);
-        pokemon.isFavorite = this.favoriteService.isFavorite(pokemon.id);
+    public async toggleFavorite(pokemon: Pokemon, event: MouseEvent): Promise<void> { 
+    event.stopPropagation(); 
+    
+
+    await this.favoriteService.toggleFavorite(pokemon.id);
+    
+
+    pokemon.isFavorite = this.favoriteService.isFavorite(pokemon.id);
     }
 
     public trackById(pokemon: Pokemon): number {
