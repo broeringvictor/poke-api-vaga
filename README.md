@@ -46,6 +46,12 @@ Na documentação do ionic, localizei o ionicstorage e foi uma grata surpresa, p
 
 Antes teria que ir carregando a lista varias vezes, assim ficou muito mais eficiente. 
 
+
+Mesmo usando Impedindo a paginação, o meu botão de coração parou de funcionar, mas está perfeitamente sincronizado com a lista.
+![async](image-9.png)
+
+O erro era no scss que estava duplicado. Acredito para sincronizar as duas listas, somente se eu utilizar o NgRx. Mas preciso focar na pagina de informações.
+
 ## Próximos Passos
 
 Após finalizar o serviço de favoritos e integrá-lo à interface, meus próximos passos serão:

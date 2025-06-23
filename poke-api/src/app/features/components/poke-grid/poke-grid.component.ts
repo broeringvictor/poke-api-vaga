@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -50,17 +50,21 @@ export class PokeGridComponent {
     @Input({ required: true }) public currentPage!: number;
     @Input({ required: true }) public totalPages!: number;
 
+    
+
     @Output() public readonly pokemonSelected = new EventEmitter<Pokemon>();
     @Output() public readonly pageChange = new EventEmitter<number>();
     @Output() public readonly favoriteToggle = new EventEmitter<Pokemon>();
 
 
-    constructor(public favoriteService: FavoriteService) {
+    constructor(public favoriteService: FavoriteService, private cdRef: ChangeDetectorRef) {
         addIcons({ heart, heartOutline, chevronBack, chevronForward });
     }
 
     public selectPokemon(pokemon: Pokemon): void {
+        console.log('➡️ NAVEGAÇÃO CLICADA para:', pokemon.name); 
         this.pokemonSelected.emit(pokemon);
+
     }
 
     public changePage(page: number): void {
@@ -70,14 +74,22 @@ export class PokeGridComponent {
     }
 
 
-    public async toggleFavorite(pokemon: Pokemon, event: MouseEvent): Promise<void> { 
-    event.stopPropagation(); 
-    
+    public async toggleFavorite(pokemon: Pokemon, event: MouseEvent): Promise<void> {
+        console.log('❤️ FAVORITO CLICADO para:', pokemon.name);
+        event.stopPropagation();
 
-    await this.favoriteService.toggleFavorite(pokemon.id);
-    
+        console.log('Estado ANTES de favoritar:', pokemon.isFavorite);
 
-    pokemon.isFavorite = this.favoriteService.isFavorite(pokemon.id);
+        await this.favoriteService.toggleFavorite(pokemon.id);
+        
+        // Verifique se o serviço está funcionando
+        const isNowFavorite = this.favoriteService.isFavorite(pokemon.id);
+        pokemon.isFavorite = isNowFavorite;
+
+        console.log('Estado DEPOIS de favoritar:', pokemon.isFavorite);
+
+        this.cdRef.detectChanges();
+        console.log('Detecção de mudanças executada.');
     }
 
     public trackById(pokemon: Pokemon): number {

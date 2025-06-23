@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -39,7 +39,7 @@ export class PokeListComponent {
     @Input({ required: true }) public pokemons!: Pokemon[];
     @Output() public readonly pokemonSelected = new EventEmitter<Pokemon>();
 
-    constructor(public favoriteService: FavoriteService) {
+    constructor(public favoriteService: FavoriteService, private cdRef: ChangeDetectorRef) {
         addIcons({ heart, heartOutline });
     }
 
@@ -47,12 +47,14 @@ export class PokeListComponent {
         this.pokemonSelected.emit(pokemon);
     }
 
-    public toggleFavorite(pokemon: Pokemon, event: MouseEvent): void {
-        event.stopPropagation();
-        this.favoriteService.toggleFavorite(pokemon.id);
-        pokemon.isFavorite = this.favoriteService.isFavorite(pokemon.id);
-    }
-
+    public async toggleFavorite(pokemon: Pokemon, event: MouseEvent): Promise<void> {
+    
+    event.stopPropagation(); 
+    
+    await this.favoriteService.toggleFavorite(pokemon.id);
+    pokemon.isFavorite = this.favoriteService.isFavorite(pokemon.id);
+    this.cdRef.detectChanges();
+  }
     public trackById(index: number, pokemon: Pokemon): number {
         return pokemon.id;
     }
