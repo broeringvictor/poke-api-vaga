@@ -15,7 +15,7 @@ import {
 import { addIcons } from 'ionicons';
 import { heart, heartOutline } from 'ionicons/icons';
 
-import { Pokemon } from 'src/app/models/pokemon.interface';
+import { SimplePokemon } from 'src/app/models/pokemon.interface';
 import { FavoriteService } from 'src/app/services/favorite.service';
 import { PadNumberPipe } from 'src/app/pipes/pad-number.pipe';
 
@@ -36,18 +36,18 @@ import { PadNumberPipe } from 'src/app/pipes/pad-number.pipe';
     ],
 })
 export class PokeListComponent {
-    @Input({ required: true }) public pokemons!: Pokemon[];
-    @Output() public readonly pokemonSelected = new EventEmitter<Pokemon>();
+    @Input({ required: true }) public pokemons!: SimplePokemon[];
+    @Output() public readonly pokemonSelected = new EventEmitter<SimplePokemon>();
 
     constructor(public favoriteService: FavoriteService, private cdRef: ChangeDetectorRef) {
         addIcons({ heart, heartOutline });
     }
 
-    public selectPokemon(pokemon: Pokemon): void {
+    public selectPokemon(pokemon: SimplePokemon): void {
         this.pokemonSelected.emit(pokemon);
     }
 
-    public async toggleFavorite(pokemon: Pokemon, event: MouseEvent): Promise<void> {
+    public async toggleFavorite(pokemon: SimplePokemon, event: MouseEvent): Promise<void> {
     
     event.stopPropagation(); 
     
@@ -55,7 +55,7 @@ export class PokeListComponent {
     pokemon.isFavorite = this.favoriteService.isFavorite(pokemon.id);
     this.cdRef.detectChanges();
   }
-    public trackById(index: number, pokemon: Pokemon): number {
+    public trackById(index: number, pokemon: SimplePokemon): number {
         return pokemon.id;
     }
 }

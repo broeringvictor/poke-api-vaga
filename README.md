@@ -4,60 +4,105 @@ Olá! Este repositório contém o desenvolvimento da minha solução para a aval
 
 O objetivo é demonstrar não apenas a implementação das funcionalidades solicitadas, mas também a aplicação de boas práticas de desenvolvimento, como componentização, arquitetura de serviços, commits semânticos e responsividade.
 
-## Status do Projeto
+## ✅ Funcionalidades Implementadas
 
-Aqui está um resumo do progresso atual, baseado nas funcionalidades solicitadas na descrição da vaga:
+| Funcionalidade         | Status      | Detalhes                                                                                       |
+|-----------------------|-------------|------------------------------------------------------------------------------------------------|
+| Listagem de Pokémon   | ✅ Concluído | Grid responsivo que exibe imagem, nome, ID e tipo de cada Pokémon.                             |
+| Paginação             | ✅ Concluído | Controles para navegar entre as páginas da Pokédex.                                            |
+| Sistema de Favoritos  | ✅ Concluído | Permite favoritar/desfavoritar Pokémon na listagem. O estado é salvo no localStorage.          |
+| Busca Otimizada       | ✅ Concluído | Campo de busca que consulta uma base local (Ionic Storage) para resposta instantânea.           |
+| Página de Detalhes    | ✅ Concluído | Rota dinâmica (/pokemon/:name) que exibe um perfil completo e rico em informações.             |
+| Filtragem de Golpes   | ✅ Concluído | Na tela de detalhes, é possível filtrar a lista de golpes por versão do jogo.                  |
 
-| Funcionalidade | Status | Descrição |
-| :--- | :---: | :--- |
-| **Tela Principal Responsiva** | ✅ Concluído | Exibe uma lista/grid de Pokémon com imagem, nome e ID. |
-| **Consumo da PokéAPI** | ✅ Concluído | O app busca e exibe os dados da API com sucesso. |
-| **Sistema de Favoritos** | 🚧 Em Andamento | Lógica para favoritar/desfavoritar e persistência de dados. |
-| **Tela de Detalhes** | ⏳ A Fazer | Exibirá informações detalhadas de cada Pokémon. |
-| **Busca e Filtragem** | ⏳ A Fazer | Campo de busca para encontrar Pokémon por nome. |
-| **Paginação** | ⏳ A Fazer | Controles para navegar entre as páginas da lista. |
-| **Boas Práticas** | ✅ Concluído | Commits claros, injeção de dependência e estrutura organizada. |
 
----
+🧠 Decisões de Arquitetura
+Durante o desenvolvimento, algumas decisões foram tomadas para melhorar a performance e a experiência do usuário:
 
-## Onde Estou no Projeto?
+Cache para a Busca: Em vez de pesquisar apenas na lista de Pokémon visível na tela, optei por carregar a lista completa de nomes de Pokémon uma única vez e salvá-la localmente com Ionic Storage. Isso resultou em uma busca instantânea e altamente performática, mesmo para Pokémon que ainda não foram exibidos na tela principal.
+
+Orquestração de Chamadas com RxJS: A tela de detalhes necessita de informações de múltiplos endpoints da API (/pokemon, /pokemon-species, /evolution-chain). Para gerenciar isso de forma eficiente, utilizei operadores do RxJS como switchMap e map para criar um fluxo de dados reativo, que busca e combina todas as informações necessárias antes de renderizar a tela.
+
+Filtragem de Dados no Front-End: A lista de golpes de um Pokémon é massiva e varia muito entre os jogos. Em vez de exibir uma tabela poluída e repetitiva, implementei uma lógica de filtragem no componente que processa os dados e exibe uma lista limpa e contextualizada para o usuário, melhorando significativamente a UX.
+
+## Histórico de Implementações
 
 Neste momento, a arquitetura base do projeto está finalizada e a tela principal já consome a PokéAPI, exibindo a listagem inicial dos Pokémon de forma componentizada e responsiva.
 
+### Sistema de Favoritos
+
 Meu foco atual é a implementação de uma das funcionalidades centrais: o **sistema de favoritos**.
 
-Conforme meu último commit (`Feat: Adicionando o favorite.service para salvar os favoritos`), estou desenvolvendo o `favorite.service`. Este serviço será o responsável por gerenciar a lógica de adicionar e remover Pokémon da lista de favoritos, utilizando o **`localStorage` do navegador** para garantir que as escolhas do usuário persistam entre as sessões.
-![localstorage](image-2.png)
+No commit `Feat: Adicionando o favorite.service para salvar os favoritos`, iniciei o desenvolvimento do `favorite.service`, responsável por gerenciar a lógica de adicionar e remover Pokémon da lista de favoritos. Utilizo o **`localStorage` do navegador** para garantir que as escolhas do usuário persistam entre sessões.
 
-Este passo é para habilitar a interatividade nos cards dos Pokémon e criar a base para a futura tela de "Meus Favoritos".
-![como está](image-1.png)
+<div align="center">
+    <img src="image-2.png" alt="Demonstração do uso do localStorage para favoritos" width="400"/>
+</div>
 
-Adicionado tema padrão, paginação conforme descrito no enunciado.
-![tema](image-4.png)
+Esse serviço habilita a interatividade nos cards dos Pokémon e serve de base para a futura tela de "Meus Favoritos".
 
-Minha ideia era utilizar somente a home e manter as informações em um modal, mas como foi solicitado que tenha redirencionamento da rota, adicionei ao clicar no pokemon ir para /pokemon/nome-do-pokemon.
+### Tema e Paginação
 
-![nome-do-pokemon](image-5.png)
+Adicionei um tema padrão ao projeto e implementei a paginação conforme descrito no enunciado.
 
-Implementei a barra de pesquista.
-Inicialmente, ela pesquisava somente nos pokemons carregados na poke-list. Mas, se eu colocasse para pesquisar ao mesmo tempo que carregasse a poke-list seria inficiente e o(1), dessa forma, pensei em utilizar o localstorage para salvar os dados.
-Na documentação do ionic, localizei o ionicstorage e foi uma grata surpresa, pois consegui criar um serviço para testar e ficou instantaneo a pesquisa. Veja, em um pokemon com id 90x: 
-![sprigatito](image-6.png) ![tabela normal](image-7.png) ![db](image-8.png)
+<div align="center">
+    <img src="image-4.png" alt="Demonstração do tema e paginação" width="400"/>
+</div>
 
-Antes teria que ir carregando a lista varias vezes, assim ficou muito mais eficiente. 
+### Navegação e Detalhes
 
+Inicialmente, planejei manter todas as informações em um modal na home, mas, conforme solicitado, implementei o redirecionamento de rota. Agora, ao clicar em um Pokémon, o usuário é levado para `/pokemon/nome-do-pokemon`.
 
-Mesmo usando Impedindo a paginação, o meu botão de coração parou de funcionar, mas está perfeitamente sincronizado com a lista.
-![async](image-9.png)
+<div align="center">
+    <img src="image-5.png" alt="Página de detalhes do Pokémon" width="400"/>
+</div>
 
-O erro era no scss que estava duplicado. Acredito para sincronizar as duas listas, somente se eu utilizar o NgRx. Mas preciso focar na pagina de informações.
+### Barra de Pesquisa Otimizada
 
-## Próximos Passos
+Implementei uma barra de pesquisa. No início, ela pesquisava apenas nos Pokémon já carregados na lista, o que era ineficiente. Para otimizar, utilizei o **Ionic Storage** para salvar localmente os nomes dos Pokémon, permitindo buscas instantâneas, mesmo para Pokémon ainda não exibidos.
 
-Após finalizar o serviço de favoritos e integrá-lo à interface, meus próximos passos serão:
+<div align="center">
+    <img src="image-6.png" alt="Exemplo de busca instantânea" width="200"/>
+    <img src="image-7.png" alt="Tabela de resultados da busca" width="200"/>
+    <img src="image-8.png" alt="Visualização do banco local" width="200"/>
+</div>
 
-1.  Desenvolver a **Tela de Detalhes**, que será acessada ao clicar em um Pokémon. -> irei colocar todos os detalhes.
-2.  Implementar a **funcionalidade de busca** na tela principal.
+Antes, era necessário carregar a lista várias vezes; agora, a busca ficou muito mais eficiente.
 
+### Sincronização de Favoritos
 
-Obrigado por analisar meu projeto! Estou à disposição para qualquer dúvida.
+Mesmo impedindo a paginação, o botão de favorito (coração) parou de funcionar temporariamente, mas está sincronizado com a lista.
+
+<div align="center">
+    <img src="image-9.png" alt="Sincronização dos favoritos" width="400"/>
+</div>
+
+O problema estava em um SCSS duplicado. Para sincronizar as listas de favoritos em diferentes componentes, considerei utilizar o NgRx, mas priorizei o desenvolvimento da página de informações.
+
+### Página de Detalhes Aprimorada
+
+A página de detalhes do Pokémon foi aprimorada com:
+
+- Sprite shiny
+- Som do grito do Pokémon
+- Atributos base
+- Linha evolutiva
+- Golpes filtrados por versão do jogo
+
+<div align="center">
+    <img src="image-10.png" alt="Página de detalhes aprimorada" width="400"/>
+</div>
+
+A linha evolutiva ainda apresenta um desafio: tentei utilizar o ID da foto para evitar uma requisição extra, mas avalio ajustar ou realizar novas requisições para melhorar.
+
+<div align="center">
+    <img src="image-11.png" alt="Linha evolutiva" width="400"/>
+</div>
+
+### Exibição dos Moves
+
+Estou avaliando a melhor forma de exibir os moves, pois consegui puxar os golpes de cada versão do jogo, mas a apresentação ainda não está ideal.
+
+<div align="center">
+    <img src="image-12.png" alt="Exibição dos moves por versão" width="400"/>
+</div>

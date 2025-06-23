@@ -1,10 +1,10 @@
-// Buscar apenas pelo nome do pokemon | Named (endpoint)
+// --- Tipos Fundamentais ---
 export interface NamedAPIResource {
   name: string;
   url: string;
 }
 
-// Resposta paginada da pokedex | NamedAPIResourceList (type)
+// ✅ INTERFACE ADICIONADA DE VOLTA
 export interface PokemonPagedResponse {
   count: number;
   next: string | null;
@@ -12,113 +12,64 @@ export interface PokemonPagedResponse {
   results: NamedAPIResource[];
 }
 
-// Sprites do Pokémon
-export interface PokemonSprites {
-  front_default: string;
-  front_shiny: string; // Sprite da versão shiny
-  other?: {
-    dream_world?: {
-      front_default: string;
-    };
-    home?: {
-      front_default: string;
-      front_shiny: string;
-    };
-    'official-artwork'?: {
-      front_default: string;
-      front_shiny: string; // Arte oficial da versão shiny
-    };
-  };
-  versions?: any; // Para a galeria de sprites de todas as gerações
-}
+// --- Interfaces para a API (Respostas Brutas) ---
 
-// Som (grito) do Pokémon
-export interface PokemonCry {
-  latest: string;
-}
-
-// Atributos base do Pokémon
-export interface PokemonStat {
-  base_stat: number;
-  stat: NamedAPIResource; 
-}
-
-// Habilidades do Pokémon
-export interface PokemonAbility {
-  ability: NamedAPIResource;
-  is_hidden: boolean; 
-}
-
-// Detalhes de como um golpe é aprendido
-export interface VersionGroupDetail {
-  level_learned_at: number; 
-  move_learn_method: NamedAPIResource; // Método (level-up, machine, tutor, egg)
-  version_group: NamedAPIResource; // Versão do jogo
-}
-
-// Golpes (moves) do Pokémon
-export interface PokemonMove {
-  move: NamedAPIResource;
-  version_group_details: VersionGroupDetail[];
-}
-
-// Descrição da Pokédex
-export interface FlavorTextEntry {
-  flavor_text: string;
-  language: NamedAPIResource; // Idioma da descrição
-  version: NamedAPIResource;
-}
-
-// Categoria do Pokémon
-export interface Genus {
-  genus: string; // ex: "Seed Pokémon"
-  language: NamedAPIResource;
-}
-
-// Dados da espécie do Pokémon (obtidos da species.url)
-export interface PokemonSpecies {
-  flavor_text_entries: FlavorTextEntry[];
-  genera: Genus[];
-  evolution_chain: {
-    url: string; // URL para buscar a cadeia de evolução
-  };
-}
-
-
-export interface ChainLink {
-  species: NamedAPIResource;
-  evolves_to: ChainLink[]; 
-}
-
-// A cadeia de evolução completa
-export interface EvolutionChain {
-  chain: ChainLink; // O início da cadeia
-}
-
-
-export interface Pokemon {
+export interface ApiPokemon {
   id: number;
-  name: string;
+  name:string;
   height: number;
   weight: number;
-  isFavorite: boolean; // Estado local, não vem da API
-
   sprites: PokemonSprites;
-  cries: PokemonCry;
+  cries: { latest: string };
   stats: PokemonStat[];
   moves: PokemonMove[];
   abilities: PokemonAbility[];
-  types: {
-    slot: number;
-    type: NamedAPIResource;
-  }[];
-  game_indices: {
-    game_index: number;
-    version: NamedAPIResource;
-  }[];
-
-  // Campos a serem preenchidos após chamadas secundárias
-  description?: string; // Descrição em inglês (filtrada da species)
-  genus?: string; // Categoria em inglês (filtrada da species)
-  evolutionChain?: EvolutionChain; // Cadeia de evolução (buscada da evolution_chain.url)
+  types: { slot: number; type: NamedAPIResource }[];
+  game_indices: { game_index: number; version: NamedAPIResource }[];
+  species: NamedAPIResource;
 }
+
+export interface PokemonSpecies {
+  flavor_text_entries: { flavor_text: string; language: NamedAPIResource }[];
+  genera: { genus: string; language: NamedAPIResource }[];
+  evolution_chain: { url: string };
+}
+
+export interface EvolutionChain {
+  chain: ChainLink;
+}
+
+// --- Modelos de Dados para a Aplicação ---
+
+/**
+ * Usado nas listas e grids (home, poke-list, poke-grid).
+ */
+export interface SimplePokemon {
+  id: number;
+  name: string;
+  sprites: PokemonSprites;
+  types: { slot: number; type: NamedAPIResource; }[];
+  isFavorite: boolean;
+}
+
+/**
+ * Usado na página de detalhes. Contém todas as informações.
+ */
+export interface PokemonProfile extends ApiPokemon {
+  description: string;
+  genus: string;
+  evolutionChain?: EvolutionChain;
+  isFavorite: boolean;
+}
+
+// --- Interfaces de Suporte ---
+export interface PokemonSprites {
+  front_default: string;
+  front_shiny: string;
+  other?: { 'official-artwork'?: { front_default: string; front_shiny: string; } };
+  versions?: any;
+}
+export interface PokemonStat { base_stat: number; stat: NamedAPIResource; }
+export interface PokemonAbility { ability: NamedAPIResource; is_hidden: boolean; }
+export interface PokemonMove { move: NamedAPIResource; version_group_details: { level_learned_at: number; move_learn_method: NamedAPIResource; version_group: NamedAPIResource; }[]; }
+export interface ChainLink { species: NamedAPIResource; evolves_to: ChainLink[]; }
